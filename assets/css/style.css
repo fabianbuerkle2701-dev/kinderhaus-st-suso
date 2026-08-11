@@ -256,48 +256,76 @@ p:last-child { margin-bottom: 0; }
 .topbar a:hover { color: #fff; }
 .topbar svg { width: 15px; height: 15px; opacity: 0.7; flex: none; }
 
+/* Hinweis: hier bewusst kein backdrop-filter – der würde einen Containing Block
+   erzeugen, wodurch das mobile Menü (position: fixed) am Header statt am
+   Viewport hinge. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: color-mix(in srgb, var(--cream) 88%, transparent);
-  backdrop-filter: saturate(1.4) blur(14px);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.3s, background 0.3s;
 }
-.site-header.is-stuck {
-  border-bottom-color: var(--line);
-  box-shadow: 0 6px 24px -18px rgba(29, 35, 32, 0.5);
+
+/* Farbband in den Logofarben – macht den Kopfbereich sofort erkennbar */
+.site-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--green) 0%,
+    var(--blue) 34%,
+    var(--yellow) 67%,
+    var(--red) 100%
+  );
 }
+
+.site-header.is-stuck { box-shadow: 0 10px 30px -20px rgba(29, 35, 32, 0.65); }
 .site-header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  min-height: 82px;
+  min-height: 92px;
+  padding-top: 5px;
 }
 
 .brand { display: flex; align-items: center; gap: 12px; flex: none; }
-.brand img { width: auto; height: 60px; transition: height 0.3s var(--ease); }
-.is-stuck .brand img { height: 50px; }
+.brand img { width: auto; height: 68px; transition: height 0.3s var(--ease); }
+.is-stuck .brand img { height: 56px; }
 .brand span { display: none; }
 
-.nav { display: flex; align-items: center; gap: 4px; }
+.nav { display: flex; align-items: center; gap: 2px; }
 .nav a {
   position: relative;
   display: block;
-  padding: 10px 15px;
+  padding: 11px 16px;
   border-radius: var(--pill);
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.98rem;
+  font-weight: 700;
+  font-size: 1rem;
   color: var(--ink-soft);
   white-space: nowrap;
   transition: color 0.2s, background 0.2s;
 }
-.nav a:hover { color: var(--ink); background: rgba(29, 35, 32, 0.05); }
-.nav a[aria-current="page"] { color: var(--green-600); background: var(--green-100); }
+
+/* Jeder Punkt bekommt beim Überfahren seine eigene Markenfarbe */
+.nav a:not(.btn):hover { color: var(--green-600); background: var(--green-100); }
+.nav a:not(.btn):nth-child(4n + 2):hover { color: var(--blue); background: var(--blue-100); }
+.nav a:not(.btn):nth-child(4n + 3):hover { color: var(--red); background: var(--red-100); }
+.nav a:not(.btn):nth-child(4n + 4):hover { color: #a8791a; background: var(--yellow-100); }
+
+.nav a[aria-current="page"] {
+  color: #fff;
+  background: var(--green);
+  box-shadow: 0 6px 16px -8px var(--green);
+}
+.nav a[aria-current="page"]:hover { color: #fff; background: var(--green-600); }
 
 .header-cta { flex: none; }
 
@@ -326,13 +354,9 @@ p:last-child { margin-bottom: 0; }
 .nav-toggle[aria-expanded="true"] i:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
 @media (max-width: 1080px) {
-  /* backdrop-filter erzeugt einen Containing Block – das mobile Menü (position:fixed)
-     würde sonst am Header statt am Viewport hängen. */
-  .site-header {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: var(--cream);
-  }
+  .site-header .container { min-height: 78px; }
+  .brand img { height: 58px; }
+  .is-stuck .brand img { height: 52px; }
   .nav-toggle { display: flex; position: relative; z-index: 101; }
   .header-cta { display: none; }
   .nav {
